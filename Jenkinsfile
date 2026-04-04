@@ -32,7 +32,7 @@ pipeline {
         stage('Docker Image Buiding and Pusing') {
             steps {
                 script {
-                    withDockerRegistry(credentialsId: 'aditya-node', url: 'https://hub.docker.com/') {
+                    withDockerRegistry(credentialsId: 'aditya-node', url: 'https://hub.docker.com') {
                             sh 'docker build -t venkaiahk/aditya-nodeapp:v1 .'
                             sh 'docker run --name=nodeapp -dt -p 5600:3000 aditya-nodeapp:v1'
                             sh 'docker push venkaiahk/aditya-nodeapp:v1'
