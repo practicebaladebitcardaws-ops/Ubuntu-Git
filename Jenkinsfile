@@ -24,7 +24,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('sonar') {
-                        sh ''' $SONAR_SCANNER/bin/sonar-scanner -Dsonar.projectKey=aditya-node -Dsonar.project.Name=aditya-node Dsonar.java.binaries=build'''
+                        sh ''' $SONAR_SCANNER/bin/sonar-scanner -Dsonar.projectKey=aditya-node -Dsonar.project.Name=aditya-node -Dsonar.java.binaries=build'''
                 }
             }
         }
