@@ -2,7 +2,7 @@ pipeline {
     agent any
     tools {
         nodejs 'node21'
-        jdk 'java17installation'
+        
     }
     environment {
         SONAR_SCANNER= tool 'sonar-scanner'
@@ -24,7 +24,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('sonar') {
-                        sh ''' $SONAR_SCANNER/bin/sonar scanner -Dsonar.projectKey=aditya-node -Dsonar.project.Name=aditya-node'''
+                        sh ''' $SONAR_SCANNER/bin/sonar scanner -Dsonar.projectKey=aditya-node -Dsonar.project.Name=aditya-node Dsonar.java.binaries=build'''
                 }
             }
         }
