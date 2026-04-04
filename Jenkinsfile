@@ -32,8 +32,8 @@ pipeline {
         stage('Docker Image Buiding and Pusing') {
             steps {
                 script {
-                            sh 'docker build -t venkaiahk/aditya-nodeapp:v2 .'
-                            sh 'docker run --name=nodeappp -dt -p 5700:3000 venkaiahk/aditya-nodeapp:v2'
+                            sh 'docker build -t venkaiahk/aditya-nodeapp:v3 .'
+                            sh 'docker run --name=adityanode -dt -p 5700:3000 venkaiahk/aditya-nodeapp:v3'
                         
                 }
             }
