@@ -33,7 +33,7 @@ pipeline {
             steps {
                 script {
                             sh 'docker build -t venkaiahk/aditya-nodeapp:v2 .'
-                            sh 'docker run --name=nodeapp -dt -p 5700:3000 venkaiahk/aditya-nodeapp:v2'
+                            sh 'docker run --name=nodeappp -dt -p 5700:3000 venkaiahk/aditya-nodeapp:v2'
                         
                 }
             }
