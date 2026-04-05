@@ -1,13 +1,8 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name:  webapp
----
+
 apiVersion: v1
 kind: Secret
 metadata:
   name:  dbsecret
-  namespace: webapp
 data:
    DB_PWD: cm9vdA==
 type: Opaque
@@ -16,7 +11,6 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: dbconfigmap
-  namespace: webapp
 data:
   DB_PORT: "3306"
   DB_USER: root
@@ -25,12 +19,12 @@ data:
   DB_HOST: db-service
 ---
   apiVersion: apps/v1
-  kind: Deployment
+  kind: StatefulSet
   metadata:
     name: db-deploy
-    namespace: webapp
   spec:
-    replicas: 2
+    serviceName: db-service
+    replicas: 1
     selector:
       matchLabels:
         mysql: db
@@ -41,7 +35,7 @@ data:
       spec:
         containers:
         - name: mysql
-          image: sqldb
+          image: mysql:8.0
           ports:
           - containerPort: 3306
             name: dbsvc
@@ -58,23 +52,28 @@ data:
                 secretKeyRef:
                   name: dbsecret
                   key: DB_PWD
+            - name: MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: dbconfigmap
+                  key: DB_DB
+
           volumeMounts:
             - name:  db-volume
               mountPath: /var/lib/mysql
         volumes:
           - name: db-volume
             hostPath:
-              path: /root/ubuntu/bank
+              path: /tmp/bank
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name:  db-service
-  namespace: webapp
+  name: db-service
 spec:
   selector:
     mysql: db
-  type:  ClusterIP
+  clusterIP: None
   ports:
   - name:  dbservice-redirect
     port:  3306
@@ -83,11 +82,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  creationTimestamp: null
-  labels:
-    app: front-end
   name: front-end
-  namespace: webapp
 spec:
   replicas: 1
   selector:
@@ -103,41 +98,51 @@ spec:
     spec:
       containers:
       - image: venkaiahk/web:v1
-        name: web
+        name: front-end-app
         ports:
         - containerPort: 8080
+          name: web
         env:
-        - name: MYSQL_USER
+        - name: DB_USER
           valueFrom:
             configMapKeyRef:
               name: dbconfigmap
               key: DB_USER
-        - name: MYSQL_PORT
+        - name: DB_PORT
           valueFrom:
             configMapKeyRef:
               name: dbconfigmap
               key: DB_PORT
-        - name: MYSQL_HOST
+        - name: DB_HOST
           valueFrom:
             configMapKeyRef:
               name: dbconfigmap
               key: DB_HOST
-        - name: MYSQL_PASSWORD
+        - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
               name: dbsecret
               key: DB_PWD
+        - name: DB_DRIVER
+          valueFrom:
+            configMapKeyRef:
+              name: dbconfigmap
+              key: DB_DRIVER 
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: dbconfigmap
+              key: DB_DB
 ---
 kind: Service
 apiVersion: v1
 metadata:
   name:  app-svc
-  namespace: webapp
 spec:
   selector:
-    app:  bank
-  type:  LoadBalancer
+    app: front-end
+  type: NodePort
   ports:
-  - name:  allow-http
-    port:  80
-    targetPort:  appsvc
+  - name: allow-http
+    port: 80
+    targetPort: web
