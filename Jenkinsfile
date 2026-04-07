@@ -37,6 +37,7 @@ pipeline {
                     -Dsonar.java.binaries=target'''
             }
         }
+        }
         
         stage('Building Docker Image') {
             steps {
