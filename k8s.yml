@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: task-deploy
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      git: aditya
+  template:
+    metadata:
+      labels:
+        git: aditya
+    spec:
+      containers:
+      - image: venkaiahk/task:v1
+        name: task-pod
+        imagePullPolicy: Always
+        ports:
+          containerPort: 8080
+          name: http-port
+        resources:
+          requests:
+            cpu: "300m"
+            memory: "1500Mi"
+          limits:
+            cpu: "400m"
+            memory: "1600Mi"
+        nodeSelector:
+          location: bangalore
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: taskmaster-service
+spec:
+  ports:
+  - port: 80
+    targetPort: http-port
+    name: allow-http
+  type: NodePort
+  selector:
+    git: aditya
+
+        
