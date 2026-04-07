@@ -1,5 +1,5 @@
-ARG base=openjdk
-ARG version=17-jre-slim
+ARG base=eclipse-temurin
+ARG version=17-jre-alpine
 FROM ${base}:${version}
 ARG path=/app
 WORKDIR ${path}
