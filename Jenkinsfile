@@ -2,8 +2,7 @@ pipeline {
     agent any
     tools {
         maven 'maven'
-        jdk ''
-
+        
         }
     environment {
         VENKAIAH_HOME = tool 'sonar-scanner'
