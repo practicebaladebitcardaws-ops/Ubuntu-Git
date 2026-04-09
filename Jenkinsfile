@@ -48,6 +48,11 @@ pipeline {
                 }
             }
         }
-        
+        stage ('K8S Setup') {
+            steps {
+                
+                sh 'kubectl apply -f k8s.yml'
+            }
+        }
     }
 }
