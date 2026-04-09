@@ -15,7 +15,7 @@ pipeline {
         }
         stage('Git Leaks') {
             steps {
-                sh 'git leaks detect --source . --exit-code 0'
+                sh 'gitleaks detect --source . --exit-code 0'
             }
         }
         stage('Trivy File Scan') {
