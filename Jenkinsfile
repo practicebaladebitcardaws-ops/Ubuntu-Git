@@ -2,6 +2,8 @@ pipeline {
     agent any
     tools {
         maven 'maven'
+        jdk ''
+
         }
     environment {
         VENKAIAH_HOME = tool 'sonar-scanner'
@@ -33,7 +35,7 @@ pipeline {
         stage('Sonar Qube Analysis') {
             steps {
                 withSonarQubeEnv('sonar') {
-                    sh ''' $VENKIAH_HOME/bin/sonar-scanner -Dsonar.projectKey=petclinc -Dsonar.projectName=petcliic \
+                    sh ''' $VENKAIAH_HOME/bin/sonar-scanner -Dsonar.projectKey=petclinc -Dsonar.projectName=petcliic \
                             -Dsonar.java.binaries=target '''
                  }
             }
