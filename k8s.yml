@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-deploy
+spec:
+  replicas: 2
+  stratagy:
+    type: RollingUpdata
+  selector:
+    matchLabels:
+      app: petclinic
+  template:
+    metadata:
+      labels:
+        app: petclinic
+    spec:
+      containers:
+        - image: venkaiahk/petclinic:v1
+          imagePullPolicy: Always
+          name: petclinic
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: "400m"
+              memory: "15000Mi"
+            limits:
+              cou: "600m"
+              memory: "1900Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pet-service
+spec:
+  ports:
+    - port: 80
+      targetPort: 8080
+      name: allo-http
+  selector:
+    app: petclinic
+---
+  
